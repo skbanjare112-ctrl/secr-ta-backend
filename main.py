@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
+from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from database import Base, engine, get_db
 from models import User, TravelEntry
@@ -13,7 +13,13 @@ app = FastAPI(
     version="1.0.0",
     description="Secure API for Admin approved employee TA entries"
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.on_event("startup")
 def startup():
     Base.metadata.create_all(bind=engine)
